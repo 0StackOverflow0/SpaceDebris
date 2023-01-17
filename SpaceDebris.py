@@ -1,13 +1,10 @@
 from copy import deepcopy
-from re import I
 from tabnanny import verbose
-from turtle import circle
 import pygame
 from pygame.locals import *
-import numpy as np
 import math
 import random
-from numba import jit
+from numba import njit
 from time import perf_counter
 from contextlib import contextmanager
 
@@ -29,27 +26,23 @@ white = (255,255,255)
 black = (0,0,0)
 pink = (255,200,200)
 
-@jit
-#@numba.vectorize([numba.float32(numba.float32),numba.float64(numba.float64)])
+@njit
 def theta(a):
     return (2 * math.pi) * (a / 360)
 
-@jit
-#@numba.vectorize([numba.float32(numba.float32),numba.float64(numba.float64)])
+@njit
 def cos_t(a):
     return math.cos(theta(a))
 
-@jit
-#@numba.vectorize([numba.float32(numba.float32),numba.float64(numba.float64)])
+@njit
 def sin_t(a):
     return math.sin(theta(a))
 
-@jit
-#@numba.vectorize([numba.float32(numba.float32, numba.int32),numba.float64(numba.float64, numba.int64)])
+@njit
 def obj_angle(a, b):
     return math.atan2(b, a)* (180 / math.pi)
 
-@jit
+@njit
 def rotated(coor, a):
     x, y = coor
     return ((x * cos_t(a)) + (y * sin_t(a)),
@@ -68,12 +61,10 @@ def collision(obj_a, pos_b):
     hull_a_r.append(first)
  
     t_pos_b = (pos_b[0] - pos_a[0], pos_b[1] - pos_a[1])
-    # jit this
-    #angle2 = math.atan2(t_pos_b[1], t_pos_b[0])* (180 / math.pi)
     angle2 = obj_angle(t_pos_b[0], t_pos_b[1])
     r_pos_b = rotated(t_pos_b, -angle2)
 
-    if r_pos_b[0] < 20.0:
+    if r_pos_b[0] < 25.0:
         collide = True
         mvt = 9999999.0
         for a_1, a_2 in zip(hull_a, hull_a_r):

@@ -1,13 +1,10 @@
-from copy import deepcopy
-from re import I
 from tabnanny import verbose
-from turtle import circle
 import pygame
 from pygame.locals import *
 import numpy as np
 import math
 import random
-from numba import jit, guvectorize, int32, float32, vectorize
+from numba import njit, jit
 from time import perf_counter
 from contextlib import contextmanager
 
@@ -29,23 +26,23 @@ white = (255,255,255)
 black = (0,0,0)
 pink = (255,200,200)
 
-@jit
+@njit
 def theta(a):
     return (2 * math.pi) * (a / 360)
 
-@jit
+@njit
 def cos_t(a):
     return math.cos(theta(a))
 
-@jit
+@njit
 def sin_t(a):
     return math.sin(theta(a))
 
-@jit
+@njit
 def obj_angle(a, b):
     return math.atan2(b, a) * (180 / math.pi)
 
-@jit
+@njit
 def rotated(coor, a):
     x, y = coor
     return np.array(((x * cos_t(a)) + (y * sin_t(a)),
@@ -54,7 +51,7 @@ def rotated(coor, a):
 def rotate_obj(obj, pos, angle):
     return np.add([ rotated(side, angle) for side in obj ], [pos for _ in range(len(obj))])
 
-@jit
+@njit
 def collide(hull_a, hull_a_r, pos_a, pos_b):
     for a_1, a_2 in zip(hull_a, hull_a_r):
         t_a_2 = np.subtract(a_2, a_1)
