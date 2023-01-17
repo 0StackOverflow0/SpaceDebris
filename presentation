@@ -1,0 +1,35 @@
+Intro Idea of Numba JIT (How to speed up Python)
+   Compiles functions to machine-code for near-native performance
+   JIT compilation means the first time the function is called will compile it
+      All further calls will use the compiled code
+   Limitations of this are based around what kind of data is being processed
+   General purpose computing will not benefit from this Library
+   Scientific computing on the other hand,
+      can use the expressiveness of Python,
+         combined with the speed of JIT compilation
+Numba Documentation
+   https://numba.readthedocs.io/en/stable/user/5minguide.html
+      Notables:
+         nopython=True or @njit will force the compiler to fail (instead of warn)
+            if the function would be reverted to Object mode (interpreted)
+               https://numba.readthedocs.io/en/stable/reference/pysupported.html
+         parallel=True will enable automatic parallelization if following:
+            https://numba.readthedocs.io/en/stable/user/parallel.html#numba-parallel
+         @vectorize works on elements inside of NumPy arrays
+            Can be typed or be a universal function
+         @guvectorize works on functions that utilize NumPy arrays
+            Can be typed or be a universal function
+         @cfunc is like njit, but gives you an object that contains
+            the function address, which can be used by C/C++ code to call it
+         
+Numpy
+Observations:
+   Keep function interfaces simple with builtin types and numpy arrays
+   Potential for @vectorize and @guvectorize to further improve performance
+   Immediate use of decorators provided a fractional improvment 
+   Rewriting to use NumPy arrays led to a 4x improvment
+
+Further Discussion:
+   Numba - Tell Those C++ Bullies to Get Lost | SciPy 2017 Tutorial 
+   https://www.youtube.com/watch?v=1AwG0T4gaO0
+   https://github.com/gforsyth/numba_tutorial_scipy2017
